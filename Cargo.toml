@@ -12,6 +12,7 @@ keywords = ['multicast']
 
 [dependencies]
 get_if_addrs = '0.5.3'
+tokio = { version = "1.20.1", features = ["full"] }
 
 [dependencies.socket2]
 version = '0.3.19'
