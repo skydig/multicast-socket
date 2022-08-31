@@ -151,8 +151,10 @@ fn create_on_interfaces(
     let wsasendmsg: WSASendMsgExtension = locate_wsasendmsg(socket.as_raw_socket())?;
 
     // Join multicast listeners on every interface passed
+   // println!("{:?}",interfaces);
     for interface in &interfaces {
-        socket.join_multicast_v4(multicast_address.ip(), &interface)?;
+     //   println!("{:?}",interface);
+        socket.join_multicast_v4(multicast_address.ip(), &interface).unwrap_or_else(| _|{});
     }
 
     // On Windows, unlike all Unix variants, it is improper to bind to the multicast address
@@ -174,7 +176,7 @@ fn create_on_interfaces(
 /// The amount of ip's per interface we can support
 /// This was an increase when I suddenly got 60 different IPs registered on my computer
 /// Let's hope we can keep it like that (or increase it even further)
-const PER_INTERFACE_IP_SUPPORT: usize = 5;
+const PER_INTERFACE_IP_SUPPORT: usize = 10;
 
 fn build_address_table(interfaces: HashSet<Ipv4Addr>) -> io::Result<HashMap<u32, Ipv4Addr>> {
     let mut buffer = vec![
@@ -227,7 +229,7 @@ pub struct MulticastSocket {
     socket: socket2::Socket,
     wsarecvmsg: WSARecvMsgExtension,
     wsasendmsg: WSASendMsgExtension,
-pub    interfaces: HashMap<u32, Ipv4Addr>,
+    pub interfaces: HashMap<u32, Ipv4Addr>,
     multicast_address: SocketAddrV4,
     buffer_size: usize,
 }
@@ -398,7 +400,8 @@ impl MulticastSocket {
             }
         } else {
             WSABUF {
-                buf: [].as_mut_ptr(),
+//buf: [].as_mut_ptr(),
+                buf: ptr::null_mut(),
                 len: 0,
             }
         };
