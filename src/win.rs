@@ -227,7 +227,7 @@ pub struct MulticastSocket {
     socket: socket2::Socket,
     wsarecvmsg: WSARecvMsgExtension,
     wsasendmsg: WSASendMsgExtension,
-    interfaces: HashMap<u32, Ipv4Addr>,
+pub    interfaces: HashMap<u32, Ipv4Addr>,
     multicast_address: SocketAddrV4,
     buffer_size: usize,
 }
